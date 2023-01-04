@@ -1,12 +1,25 @@
 from flask import Blueprint, request, jsonify
-
+from models import BatchRequestSchema
 from builder import builder_query
+from os import path
 
 main_bp = Blueprint('main', __name__)
 
+FILE_NAME: str = 'data/apache_logs.txt'
 
 @main_bp.route('/perform_query', methods=['POST'])
 def perform_query():
     data = request.json
+    validation_data = BatchRequestSchema().load(data)
 
-    return jsonify(builder_query(cmd='', value='GET', file_name='data/apache_logs.txt'))
+    result =  None
+    for query in validation_data['queries']:
+        result = builder_query(
+            cmd=query['cmd'],
+            value=query['value'],
+            file_name=FILE_NAME,
+            data=result,
+        )
+
+
+    return jsonify(path.basename(FILE_NAME), result)
