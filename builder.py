@@ -1,5 +1,5 @@
-from typing import Optional
-from os.path import exists
+from typing import Optional, Dict
+import os
 
 from utils import filter_query, unique_query, limit_query, map_query, sort_query
 
@@ -16,10 +16,6 @@ def read_file(file_name: str):
     with open(file_name) as file:
         for line in file:
             yield line
-
-
-# def check_file(file_name):
-#     return exists(file_name)
 
 
 def builder_query(cmd: str, value: str, file_name: str, data: Optional[list[str]]):

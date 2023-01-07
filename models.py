@@ -1,17 +1,25 @@
-from marshmallow import Schema, fields, validates_schema, ValidationError
+from typing import Dict, List
 
-VALID_CMD_COMMANDS = ('filter', 'unique', 'limit', 'map', 'sotr')
+from marshmallow import Schema, fields, validates_schema, ValidationError
+import os
+
+VALID_CMD_COMMANDS = ('filter', 'unique', 'limit', 'map', 'sort')
+
+FILE_NAME: str = 'data/apache_logs.txt'
 
 
 class RequestSchema(Schema):
-    file_name = fields.Str()
     cmd = fields.Str(required=True)
     value = fields.Str()
+    file_name = fields.Str()
 
     @validates_schema
     def check_all_cmd_valid(self, values: dict[str, str], *args, **kwargs):
         if values['cmd'] not in VALID_CMD_COMMANDS:
             raise ValidationError('"cmd" contains invalid value')
+
+        if values['file_name'] != os.path.basename(FILE_NAME):
+            raise FileExistsError
 
 
 class BatchRequestSchema(Schema):

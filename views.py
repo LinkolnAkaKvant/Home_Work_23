@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import BatchRequestSchema
 from builder import builder_query
-from os import path
+import os
 
 main_bp = Blueprint('main', __name__)
 
@@ -22,4 +22,4 @@ def perform_query():
             data=result,
         )
 
-    return jsonify(path.basename(FILE_NAME), result)
+    return jsonify(os.path.basename(FILE_NAME), result)
