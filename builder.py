@@ -1,7 +1,6 @@
-from typing import Optional, Dict
-import os
+from typing import Iterator, List, Any
 
-from utils import filter_query, unique_query, limit_query, map_query, sort_query
+from utils import filter_query, unique_query, limit_query, map_query, sort_query, regex_query
 
 CMD_TO_FUNCTIONS = {
     'filter': filter_query,
@@ -9,16 +8,17 @@ CMD_TO_FUNCTIONS = {
     'limit': limit_query,
     'map': map_query,
     'sort': sort_query,
+    'regex': regex_query,
 }
 
 
-def read_file(file_name: str):
+def read_file(file_name: str) -> Iterator[str]:
     with open(file_name) as file:
         for line in file:
             yield line
 
 
-def builder_query(cmd: str, value: str, file_name: str, data: Optional[list[str]]):
+def builder_query(cmd: str, value: str, file_name: str, data: Any[str]) -> List[str]:
     if data is None:
         prepared_data = read_file(file_name)
     else:
